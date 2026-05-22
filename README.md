@@ -1,4 +1,4 @@
-_Project:_ Streaming Inference runtime for Intracortical Speech Brain Computer Interface decoding.  
+# Streaming Inference runtime for Intracortical Speech Brain Computer Interface decoding.  
 
 _Motivation:_ BCI decoding requires fast, local inference speeds for data security as well as practicality. There are tons of research on different model architectures, but no benchmarked, model-agnostic inference library that a researcher could drop their trained model into. 
 
