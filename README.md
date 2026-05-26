@@ -4,9 +4,7 @@ A production-grade, open-source C++ streaming inference runtime for intracortica
 
 Drop in a trained model. Get documented latency. 
 
----
-
-_Motivation:_ 
+## Motivation:
 BCI decoding requires fast, local inference speeds for data security as well as practicality. There are tons of research on different model architectures, but no benchmarked, model-agnostic inference library for streaming speech BCI decoding that a researcher could drop their trained model into. 
 
 This project does not make decisions about how neural signals should be processed as that is the researcher's domain. It accepts whatever tensor a model was trained on and runs it fast. 
@@ -140,6 +138,7 @@ neural-decoder-runtime/
 3. Motor decoding, cursor control, and other BCI extensions
 4. whisper-style global attention models
 5. multi-language support
+6. trained classifier for boundary detection 
 
 
 
