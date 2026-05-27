@@ -1,5 +1,7 @@
-data/
 venv/
+competitionData/
+*.mat
+*.tar.gz
 
 # Build
 build/
