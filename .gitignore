@@ -1,4 +1,5 @@
 venv/
+competitionData_readme.txt
 competitionData/
 *.mat
 *.tar.gz
