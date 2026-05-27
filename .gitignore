@@ -1,2 +1,28 @@
 data/
 venv/
+
+# Build
+build/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Model artifacts
+*.pt
+*.onnx
+constants.json
+
+# Compiled Python extensions
+*.so
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp
