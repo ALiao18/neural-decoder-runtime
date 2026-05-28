@@ -1,5 +1,54 @@
 import nltk
 from nltk.corpus import cmudict
+import re
+
+# Contraction expansion map
+CONTRACTIONS = {
+    "dont":    "do not",
+    "doesnt":  "does not",
+    "didnt":   "did not",
+    "cant":    "can not",
+    "couldnt": "could not",
+    "wouldnt": "would not",
+    "shouldnt": "should not",
+    "isnt":    "is not",
+    "arent":   "are not",
+    "wasnt":   "was not",
+    "werent":  "were not",
+    "hasnt":   "has not",
+    "havent":  "have not",
+    "hadnt":   "had not",
+    "wont":    "will not",
+    "ive":     "i have",
+    "youve":   "you have",
+    "weve":    "we have",
+    "theyve":  "they have",
+    "im":      "i am",
+    "youre":   "you are",
+    "hes":     "he is",
+    "shes":    "she is",
+    "theyre":  "they are",
+    "were":    "we are",
+    "id":      "i would",
+    "youd":    "you would",
+    "hed":     "he would",
+    "shed":    "she would",
+    "wed":     "we would",
+    "theyd":   "they would",
+    "ill":     "i will",
+    "youll":   "you will",
+    "hell":    "he will",
+    "shell":   "she will",
+    "well":    "we will",
+    "theyll":  "they will",
+    "its":     "it is",
+    "thats":   "that is",
+    "whats":   "what is",
+    "heres":   "here is",
+    "theres":  "there is",
+    "whos":    "who is",
+    "lets":    "let us",
+}
 
 # ARPAbet phoneme set (39 phonemes)
 PHONEMES = [
@@ -34,7 +83,7 @@ def _get_cmudict():
         _cmudict = cmudict.dict()
     return _cmudict
 
-def text_to_indices(text: str) -> list[int]:
+def text_to_indices(text: str, debug = False) -> list[int]:
     """
     Convert a sentence string to a list of phoneme indices. 
     Words not found in cmudict are skipped with a warning. 
@@ -43,13 +92,14 @@ def text_to_indices(text: str) -> list[int]:
 
     d = _get_cmudict()
     indices = []
-    for word in text.lower().split():
+    for word in normalize_text(text).split():
         # strip punctuation
         word = ''.join(c for c in word if c.isalpha())
         if not word:
             continue
         if word not in d:
-            print(f"Warning: Word '{word}' not found in CMU dictionary, skipping.")
+            if debug == True:
+                print(f"Warning: Word '{word}' not found in CMU dictionary, skipping.")
             continue
 
         # take first pronunciation
@@ -61,4 +111,21 @@ def text_to_indices(text: str) -> list[int]:
                 indices.append(PHONEME_TO_IDX[p_clean])
         
     return indices
-            
+
+def normalize_text(text: str) -> str:
+    """
+    Lowercase, strip punctuation, expand contractions.
+    """
+    # lowercase
+    text = text.lower()
+
+    # remove punctuation except apostrophes (handle contractions first)
+    text = re.sub(r"'", "", text)         # remove apostrophes
+    text = re.sub(r"[^a-z\s]", "", text)  # strip remaining punctuation
+
+    # expand contractions
+    words = text.split()
+    expanded = []
+    for word in words:
+        expanded.extend(CONTRACTIONS.get(word, word).split())
+    return " ".join(expanded)
