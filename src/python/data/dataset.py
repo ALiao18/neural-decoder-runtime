@@ -2,6 +2,10 @@ import os
 import numpy as np
 import json
 import scipy.io
+import torch
+import torch.nn as nn
+from torch.nn.utils.rnn import pad_sequence
+from data.vocab import text_to_indices
 from torch.utils.data import Dataset
 
 class BlockZScorer:
@@ -102,6 +106,37 @@ class SpeechBCIDataset(Dataset):
             features = self.scaler.transform(features, block)
         return self.trials[idx]
 
+def collate_fn(batch):
+    """
+    Collates variable-length trials into padded batch
+
+    Args:
+        batch: list of (features, label, block_idx)
+                        features: [T, 256] float32 numpy array
+
+    Returns:
+        padded_features: [T_max, B, 256] float32 tensor (time-first)
+        targets:         [sum of target lengths]        int32 tensor
+        input_lengths:   [B]                            int64 tensor (CTCLoss accepts int64)
+        target_lengths:  [B]                            int64 tensor (recent torch version accepts int64)
+    """
+    features_list, labels, _ = zip(*batch)
+
+    # convert to tensors, keep time-first
+    feature_tensors = [torch.from_numpy(f) for f in features_list] # list of [T, 256] tensors
+    input_lengths   = torch.tensor([f.shape[0] for f in feature_tensors], dtype=torch.long) # [B]
+
+    # pad to [T_max, B, 256]
+    padded_features = pad_sequence(feature_tensors, batch_first=False) # [T_max, B, 256]
+
+    # convert labels to phoneme indices
+    targets_list   = [torch.tensor(text_to_indices(label), dtype=torch.int32) for label in labels]
+    target_lengths = torch.tensor([len(t) for t in targets_list], dtype=torch.long) # [B]
+
+    # CTCLoss expects targets as 1D concatenated tensor
+    targets = torch.cat(targets_list) # [sum of target lengths]
+    
+    return padded_features, targets, input_lengths, target_lengths
 
 
 
