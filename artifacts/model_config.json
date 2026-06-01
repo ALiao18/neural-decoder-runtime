@@ -1,0 +1,13 @@
+{
+  "model_type": "gru_ctc",
+  "input_size": 256,
+  "bin_size_ms": 20,
+  "context_bins": 25,
+  "stride_bins": 5,
+  "vocab": "arpabet",
+  "hidden_size": 1024,
+  "num_layers": 3,
+  "vocab_size": 40,
+  "dropout": 0.2,
+  "torchscript_path": "/Users/aliao/Documents/neural-decoder-runtime/artifacts/model.pt"
+}

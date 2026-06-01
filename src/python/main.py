@@ -1,18 +1,25 @@
+import torch
+from model.gru_ctc import SpeechBCIModel
+import sys
+sys.path.insert(0, '~/Documents/neural-decoder-runtime')
+
+model = SpeechBCIModel()
+model.load_state_dict(torch.load('checkpoints/best.pt', map_location='cpu'))
+model.eval()
+
+# load one trial
 from data.dataset import SpeechBCIDataset, BlockZScorer
-import numpy as np
-import os
+ds_raw = SpeechBCIDataset('competitionData/train')
+scaler = BlockZScorer(ds_raw.trials)
+ds = SpeechBCIDataset('competitionData/train', scaler=scaler)
 
-def main():
-    path_base  = '/Users/aliao/Documents/neural-decoder-runtime/'
-    path_train = os.path.join(path_base, 'data/willet/competitionData/train')
-    path_test  = os.path.join(path_base, 'data/willet/competitionData/test')
+features, label, block = ds[0]
+x = torch.from_numpy(features).unsqueeze(1)  # [T, 1, 256]
 
-    ds_raw = SpeechBCIDataset(path_train)
-    scaler = BlockZScorer(ds_raw.trials)
-    scaler.save('constants.json')
+with torch.no_grad():
+    logits = model(x)
+    probs = torch.softmax(logits.squeeze(1), dim=-1)  # [T, 40]
 
-    ds = SpeechBCIDataset(path_train, scaler=scaler)
-    ds_test = SpeechBCIDataset(path_test, scaler=scaler)
-
-if __name__ == "__main__":
-    main()
+print(f"Mean blank probability: {probs[:, 0].mean():.4f}")
+print(f"Mean non-blank probability: {probs[:, 1:].mean():.4f}")
+print(f"Most predicted token: {probs.argmax(dim=-1).mode().values.item()}")
