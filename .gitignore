@@ -6,6 +6,7 @@ competitionData/
 
 # Build
 build/
+docs/
 
 # Python
 venv/

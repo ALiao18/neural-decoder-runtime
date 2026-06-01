@@ -1,0 +1,3 @@
+# Week 1
+1. z-score constants are computed on all 20 sentences per block, and not a held-out-safe partition. This incurs some label leakage before submission to compatitions, and should be revisited before first leaderboard submission
+2. since we are building non-streamining mode first, we use bidirectional GRU for training and forward only for streamining inference. This means batch and streaming outputs will differ and will need to be fixed if streamining WER is significantly worse than batch WER. 
