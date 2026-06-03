@@ -19,40 +19,52 @@ message(STATUS "Torch version:  ${Torch_VERSION}")
 message(STATUS "Torch libs:     ${TORCH_LIBRARIES}")
 
 # ---------------------------------------------------------------------------
-# Main executable (stub — src/cpp/main.cpp must exist)
+# Runtime static library
+# All non-main C++ logic lives here. Both the main executable and Google Test
+# link against this target — nothing testable goes in main.cpp.
 # ---------------------------------------------------------------------------
-add_executable(neural_decoder_runtime
-  src/cpp/main.cpp
+add_library(ndr_runtime STATIC
+  src/cpp/runtime/model_runner.cpp
 )
 
-target_include_directories(neural_decoder_runtime PRIVATE
+target_include_directories(ndr_runtime PUBLIC
+  ${CMAKE_SOURCE_DIR}/src/cpp
+  ${CMAKE_SOURCE_DIR}/src/cpp/third_party
   ${TORCH_INCLUDE_DIRS}
-  src/cpp
 )
 
-target_link_libraries(neural_decoder_runtime PRIVATE
+target_link_libraries(ndr_runtime PUBLIC
   ${TORCH_LIBRARIES}
 )
 
-# Required on macOS to find torch dylibs at runtime
-set_target_properties(neural_decoder_runtime PROPERTIES
-  BUILD_RPATH "${TORCH_INSTALL_PREFIX}/lib"
-)
-
-# ---------------------------------------------------------------------------
-# Compiler flags
-# ---------------------------------------------------------------------------
-target_compile_options(neural_decoder_runtime PRIVATE
+target_compile_options(ndr_runtime PRIVATE
   -Wall
   -Wextra
   -O2
 )
 
+set_target_properties(ndr_runtime PROPERTIES
+  BUILD_RPATH "${TORCH_INSTALL_PREFIX}/lib"
+)
+
 # ---------------------------------------------------------------------------
-# Tests (Google Test — wired up when tests/cpp exists)
+# Main executable
 # ---------------------------------------------------------------------------
-# Uncomment when you're ready to add tests:
-#
+add_executable(neural_decoder_runtime
+  src/cpp/main.cpp
+)
+
+target_link_libraries(neural_decoder_runtime PRIVATE
+  ndr_runtime
+)
+
+set_target_properties(neural_decoder_runtime PROPERTIES
+  BUILD_RPATH "${TORCH_INSTALL_PREFIX}/lib"
+)
+
+# ---------------------------------------------------------------------------
+# Tests (Google Test — uncomment when tests/cpp is ready)
+# ---------------------------------------------------------------------------
 # enable_testing()
 # find_package(GTest REQUIRED)
 # add_subdirectory(tests/cpp)

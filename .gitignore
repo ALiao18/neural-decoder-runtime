@@ -6,7 +6,7 @@ competitionData/
 
 # Build
 build/
-docs/
+docs/design_log.md
 
 # Python
 venv/
