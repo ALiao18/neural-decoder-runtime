@@ -9,5 +9,5 @@
   "num_layers": 3,
   "vocab_size": 40,
   "dropout": 0.2,
-  "torchscript_path": "/Users/aliao/Documents/neural-decoder-runtime/artifacts/model.pt"
+  "torchscript_path": "artifacts/model.pt"
 }

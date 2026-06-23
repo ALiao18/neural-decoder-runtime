@@ -4,10 +4,9 @@ from model.gru_ctc import SpeechBCIModel
 import os
 
 # --- config ---
-BASE_DIR          = '/Users/aliao/Documents/neural-decoder-runtime/'
-CHECKPOINT_PATH   = os.path.join(BASE_DIR, 'artifacts/checkpoints/best.pt')
-TORCHSCRIPT_PATH  = os.path.join(BASE_DIR, 'artifacts/model.pt')
-CONFIG_PATH       = os.path.join(BASE_DIR, 'artifacts/model_config.json')
+CHECKPOINT_PATH   = 'artifacts/checkpoints/best.pt'
+TORCHSCRIPT_PATH  = 'artifacts/model.pt'
+CONFIG_PATH       = 'artifacts/model_config.json'
 
 INPUT_SIZE   = 256
 HIDDEN_SIZE  = 1024
