@@ -1,6 +1,7 @@
 #include <iostream>
 #include <runtime/model_runner.hpp>
 #include <runtime/latency_timer.hpp>
+#include <runtime/zscore_constants.hpp>
 
 int main(int argc, char* argv[]) {
 
@@ -20,6 +21,10 @@ int main(int argc, char* argv[]) {
                   << "      input_channels: " << cfg.input_channels << "\n"
                   << "      context_bins:   " << cfg.context_bins << "\n"
                   << "      vocab_size:     " << cfg.vocab_size << "\n";
+
+        // --- load constants ---
+        ndr::ZScoreConstants zscore("artifacts/constants.json");
+        zscore.set_block("1"); // block 1 for benchmark
         
         // --- Benchmark setup ---
         const int N = 1000;
@@ -33,11 +38,11 @@ int main(int argc, char* argv[]) {
             timer.start("total");
             
             timer.start("preprocessing");
-            // stub: z-score normalization will be implemented here
+            auto normed = zscore.normalize(input);
             timer.stop("preprocessing");
 
             timer.start("inference");
-            auto output = runner.forward(input);
+            auto output = runner.forward(normed);
             timer.stop("inference");
 
             timer.start("decoding");

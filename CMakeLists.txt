@@ -26,6 +26,7 @@ message(STATUS "Torch libs:     ${TORCH_LIBRARIES}")
 add_library(ndr_runtime STATIC
   src/cpp/runtime/model_runner.cpp
   src/cpp/runtime/latency_timer.cpp
+  src/cpp/runtime/zscore_constants.cpp
 )
 
 target_include_directories(ndr_runtime PUBLIC
@@ -66,6 +67,14 @@ set_target_properties(neural_decoder_runtime PROPERTIES
 # ---------------------------------------------------------------------------
 # Tests (Google Test — uncomment when tests/cpp is ready)
 # ---------------------------------------------------------------------------
-# enable_testing()
-# find_package(GTest REQUIRED)
-# add_subdirectory(tests/cpp)
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz
+)
+# Prevent GTest from overriding our compiler/linker settings on Windows
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+add_subdirectory(tests/cpp)
