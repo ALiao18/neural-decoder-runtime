@@ -75,7 +75,7 @@ Measured on Apple M4 Max, CPU inference, Brain-to-Text 2024 dataset
 | Component      | p50 | p95 | p99 |
 | -------------- | --- | --- | --- |
 | Preprocessing  |0.003|0.004|0.005|
-| Inference      |     |.    |     |
+| Inference      |5.103|5.179|5.219|
 | Decoding (CTC) |     |     |.    |
 | Language Model |     |.    |.    |
 | Total          |.    |.    |.    |
