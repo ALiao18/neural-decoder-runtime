@@ -139,7 +139,7 @@ neural-decoder-runtime/
 4. whisper-style global attention models
 5. multi-language support
 6. trained classifier for boundary detection 
-
+7. consider LSL instead of WebSocket
 
 
 
