@@ -29,4 +29,5 @@ constants.json
 # Editor
 .vscode/
 .idea/
-*.swp
+*.swpcmake_test_discovery_*json
+.DS_Store
