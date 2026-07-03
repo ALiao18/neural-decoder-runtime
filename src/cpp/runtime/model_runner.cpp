@@ -74,7 +74,7 @@ void ModelRunner::load_module() {
     }
 }
 
-torch::Tensor ModelRunner::forward(const torch::Tensor& input) {
+torch::Tensor ModelRunner::forward(const torch::Tensor& input) const{
     // invariant, input must be float32
     if (input.dtype() != torch::kFloat32) {
         throw std::runtime_error(

@@ -27,15 +27,14 @@ public:
 
     // forward pass, imnput must be float32, shape [batch T, input_channels]
     // returns a tensor shape [batch T, vocab_size] 
-    torch::Tensor forward(const torch::Tensor& input);
+    torch::Tensor forward(const torch::Tensor& input) const;
 
     const ModelConfig& config() const { return config_; }
 ;
 
 private:
     ModelConfig config_;
-    torch::jit::script::Module module_; // cpp representation of model.pt
-
+    mutable torch::jit::script::Module module_; // cpp representation of model.pt
     void load_config(const std::string& config_path);
     void validate_config() const; // read only object
     void load_module();
