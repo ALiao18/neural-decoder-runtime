@@ -1,6 +1,7 @@
 import json
 import torch
 from model.gru_ctc import SpeechBCIModel
+from data.vocab import BLANK_IDX, IDX_TO_PHONEME
 import os
 
 # --- config ---
@@ -13,6 +14,17 @@ HIDDEN_SIZE  = 1024
 NUM_LAYERS   = 3
 VOCAB_SIZE   = 40
 DROPOUT      = 0.2
+
+VOCAB_PATH = 'artifacts/vocab.json'
+
+# --- export vocab mapping, static ---
+vocab = {
+    'blank_idx': BLANK_IDX,
+    'idx_to_phoneme': IDX_TO_PHONEME
+}
+with open(VOCAB_PATH, 'w') as f:
+    json.dump(vocab, f, indent=2)
+print(f"Saved vocab mapping to {VOCAB_PATH}")
 
 # --- load model ---
 print("Loading checkpoint...")

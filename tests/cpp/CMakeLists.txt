@@ -1,5 +1,6 @@
 add_executable(ndr_tests
   test_zscore.cpp
+  test_ctc_greedy.cpp
 )
 target_link_libraries(ndr_tests PRIVATE
   ndr_runtime

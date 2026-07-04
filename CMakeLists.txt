@@ -27,6 +27,7 @@ add_library(ndr_runtime STATIC
   src/cpp/runtime/model_runner.cpp
   src/cpp/runtime/latency_timer.cpp
   src/cpp/runtime/zscore_constants.cpp
+  src/cpp/decode/ctc_greedy.cpp
 )
 
 target_include_directories(ndr_runtime PUBLIC
